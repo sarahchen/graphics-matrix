@@ -93,6 +93,15 @@ Returns:
 turns m in to an identity matrix
 */
 void ident(struct matrix *m) {
+  int num = m->rows;
+  int a, b;
+
+  for(a=0; a<num; a++){
+    for(b=0; b<num; b++) {
+      if(b == a) {m[a][b] = 1;}
+      else {m[a][b] = 0;}
+    }
+  }
 }
 
 
@@ -106,11 +115,9 @@ multiply each element of m by x
 void scalar_mult(double x, struct matrix *m) {
   int i = 0;
   int j = 0;
-  for(i=0; i<m->rows; i++) {
-    for(j=0; j<m->cols; j++) {
+  for(i=0; i<m->rows; i++)
+    for(j=0; j<m->cols; j++)
       m[i][j] = m[i][j] * x;
-    }
-  }
 }
 
 
@@ -130,18 +137,13 @@ void matrix_mult(struct matrix *a, struct matrix *b) {
   int ac, br;
 
   // Placement in tmp
-  for(r=0; r<tmp->rows; r++) {
-    for(c=0; c<tmp->cols; c++) {
+  for(r=0; r<tmp->rows; r++)
+    for(c=0; c<tmp->cols; c++)
       // Column in a changes
-      for(ac=0; ac<a->cols; ac++) {
+      for(ac=0; ac<a->cols; ac++)
         // Row in b changes
-        for(br=0; br<b->rows; br++) {
+        for(br=0; br<b->rows; br++)
           tmp[r][c] = tmp[r][c] + a[r][ac]*b[br][c];
-        }
-      }
-    }
-  }
-
 }
 
 
@@ -170,6 +172,7 @@ Returns: The translation matrix created using x, y and z
 as the translation offsets.
 ====================*/
 struct matrix * make_translate(double x, double y, double z) {
+  
 }
 
 /*======== struct matrix * make_scale() ==========

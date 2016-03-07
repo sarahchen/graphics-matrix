@@ -10,45 +10,61 @@
 Inputs:   struct matrix * points
          int x
          int y
-         int z 
-Returns: 
+         int z
+Returns:
 adds point (x, y, z) to points and increment points.lastcol
 if points is full, should call grow on points
 ====================*/
 void add_point( struct matrix * points, int x, int y, int z) {
+	if(points->lastcols >= points->cols) {
+		grow_matrix(points, cols*2);
+	}
+
+	points->lastcols = points->lastcols + 1;
+	int lc = points->lastcols;
+	points[0][lc] = x;
+	points[1][lc] = y;
+	points[2][lc] = z;
 }
 
 /*======== void add_edge() ==========
 Inputs:   struct matrix * points
           int x0, int y0, int z0, int x1, int y1, int z1
-Returns: 
+Returns:
 add the line connecting (x0, y0, z0) to (x1, y1, z1) to points
 should use add_point
 ====================*/
-void add_edge( struct matrix * points, 
-	       int x0, int y0, int z0, 
+void add_edge( struct matrix * points,
+	       int x0, int y0, int z0,
 	       int x1, int y1, int z1) {
+
+					 add_point(points, x0, y0, z0);
+					 add_point(points, x1, y1, z1);
 }
 
 /*======== void draw_lines() ==========
 Inputs:   struct matrix * points
          screen s
-         color c 
-Returns: 
+         color c
+Returns:
 Go through points 2 at a time and call draw_line to add that line
 to the screen
 ====================*/
 void draw_lines( struct matrix * points, screen s, color c) {
+	int r, c;
+
+	for(c=0; c<points->cols-1; c++)
+		draw_line(points[0][c], points[1][c], points[2][c], points[0][c+1], points[1][c+1], points[2][c+1], s, c);
 }
 
 
 void draw_line(int x0, int y0, int x1, int y1, screen s, color c) {
- 
+
   int x, y, d, dx, dy;
 
   x = x0;
   y = y0;
-  
+
   //swap points so we're always draing left to right
   if ( x0 > x1 ) {
     x = x1;
@@ -67,7 +83,7 @@ void draw_line(int x0, int y0, int x1, int y1, screen s, color c) {
     //slope < 1: Octant 1 (5)
     if ( dx > dy ) {
       d = dy - ( dx / 2 );
-  
+
       while ( x <= x1 ) {
 	plot(s, c, x, y);
 
@@ -103,13 +119,13 @@ void draw_line(int x0, int y0, int x1, int y1, screen s, color c) {
   }
 
   //negative slope: Octants 7, 8 (3 and 4)
-  else { 
+  else {
 
     //slope > -1: Octant 8 (4)
     if ( dx > abs(dy) ) {
 
       d = dy + ( dx / 2 );
-  
+
       while ( x <= x1 ) {
 
 	plot(s, c, x, y);
@@ -132,7 +148,7 @@ void draw_line(int x0, int y0, int x1, int y1, screen s, color c) {
       d =  (dy / 2) + dx;
 
       while ( y >= y1 ) {
-	
+
 	plot(s, c, x, y );
 	if ( d < 0 ) {
 	  y = y - 1;
